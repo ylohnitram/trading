@@ -61,15 +61,15 @@ profit_amount=$(echo "scale=2; $expected_profit - $total_fees" | bc)
 printf "╔═════════════════════════════════╗\n"
 printf "║       TRADE CALCULATIONS        ║\n"
 printf "╠═════════════════════════════════╣\n"
-printf "║ Maximum Risk:         %-8.2f  ║\n" $actual_risk
+printf "║ Maximum Risk:         \033[31m%-8.2f\033[0m  ║\n" $actual_risk
 printf "║ Expected Profit %%:    %-7.2f%%  ║\n" $profit_percent
 printf "║ Stop Loss %%:          %-7.2f%%  ║\n" $stop_loss_percent
 printf "║ Leverage:             %-8.2f  ║\n" $leverage
 printf "╠═════════════════════════════════╣\n"
 printf "║ Position Size:        %-8.2f ║\n" $position_size
-printf "║ Margin Required:      %-8.2f  ║\n" $margin_required
+printf "║ Margin Required:      \033[33m%-8.2f\033[0m  ║\n" $margin_required
 printf "║ Total Fees:           %-8.2f  ║\n" $total_fees
-printf "║ Expected Profit:      %-8.2f  ║\n" $profit_amount
+printf "║ Expected Profit:      \033[32m%-8.2f\033[0m  ║\n" $profit_amount
 printf "╚═════════════════════════════════╝\n"
 
 exit 0
