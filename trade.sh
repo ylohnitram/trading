@@ -4,29 +4,59 @@ set -eou pipefail
 
 # Function to display help
 show_help() {
-    echo "Usage: $0 <max_risk> <profit_percent> <stop_loss_percent> <leverage> <limit>"
+    echo "Usage: $0 --margin=<max_risk> --profit=<profit_percent> --loss=<stop_loss_percent> --leverage=<leverage> --margin-limit=<limit>"
     echo
     echo "Arguments:"
-    echo "  max_risk          Maximum amount willing to risk per trade"
-    echo "  profit_percent    Expected profit percentage"
-    echo "  stop_loss_percent Stop loss percentage"
-    echo "  leverage          Trading leverage"
-    echo "  limit            Maximum margin limit"
+    echo "  --margin         Maximum amount willing to risk per trade"
+    echo "  --profit        Expected profit percentage"
+    echo "  --loss          Stop loss percentage"
+    echo "  --leverage      Trading leverage"
+    echo "  --margin-limit  Maximum margin limit"
 }
 
-# Check arguments
-if [ $# -ne 5 ]; then
-    echo "Error: Incorrect number of arguments"
+# Initialize variables with default empty values
+max_risk=""
+profit_percent=""
+stop_loss_percent=""
+leverage=""
+limit=""
+
+# Parse named arguments
+for arg in "$@"; do
+    case $arg in
+        --margin=*)
+        max_risk="${arg#*=}"
+        ;;
+        --profit=*)
+        profit_percent="${arg#*=}"
+        ;;
+        --loss=*)
+        stop_loss_percent="${arg#*=}"
+        ;;
+        --leverage=*)
+        leverage="${arg#*=}"
+        ;;
+        --margin-limit=*)
+        limit="${arg#*=}"
+        ;;
+        --help)
+        show_help
+        exit 0
+        ;;
+        *)
+        echo "Error: Unknown argument: $arg"
+        show_help
+        exit 1
+        ;;
+    esac
+done
+
+# Check if all required arguments are provided
+if [ -z "$max_risk" ] || [ -z "$profit_percent" ] || [ -z "$stop_loss_percent" ] || [ -z "$leverage" ] || [ -z "$limit" ]; then
+    echo "Error: Missing required arguments"
     show_help
     exit 1
 fi
-
-# Assign arguments
-readonly max_risk=$1
-readonly profit_percent=$2
-readonly stop_loss_percent=$3
-readonly leverage=$4
-readonly limit=$5
 
 # Validate numeric input
 if ! [[ $max_risk =~ ^[0-9]+(\.[0-9]+)?$ ]] || \
